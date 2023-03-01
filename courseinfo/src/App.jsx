@@ -15,16 +15,17 @@ const Content = ({ parts }) => {
 const Part = ({ part, exercises }) => {
   return (
     <React.Fragment>
-      <p>
-        {part} {exercises}
-      </p>
+      <p>{`${part} ${exercises}`}</p>
     </React.Fragment>
   );
 };
-const Total = ({ exercises1, exercises2, exercises3 }) => {
+const Total = ({ parts }) => {
   return (
     <div>
-      <p>Number of exercises {exercises1 + exercises2 + exercises3}</p>
+      <p>
+        {`Number of exercises 
+        ${parts[0].exercises + parts[1].exercises + parts[2].exercises}`}
+      </p>
     </div>
   );
 };
@@ -42,11 +43,7 @@ const App = () => {
     <React.Fragment>
       <Header course={course.name} />
       <Content parts={course.parts} />
-      <Total
-        exercises1={course.parts[0].exercises}
-        exercises2={course.parts[1].exercises}
-        exercises3={course.parts[2].exercises}
-      />
+      <Total parts={course.parts} />
     </React.Fragment>
   );
 };
