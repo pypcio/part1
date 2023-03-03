@@ -11,17 +11,29 @@ const Paragraph = ({ value, text, znak }) => {
 };
 
 const Statistics = (props) => {
-  return (
-    <React.Fragment>
-      <h2>statistics</h2>
-      <Paragraph value={props.good} text="good" />
-      <Paragraph value={props.neutral} text="neutral" />
-      <Paragraph value={props.bad} text="bad" />
-      <Paragraph value={props.total} text="total" />
-      <Paragraph value={props.average} text="average" />
-      <Paragraph value={props.partGood * 100} text="positive" znak={"%"} />
-    </React.Fragment>
-  );
+  let condition = false;
+  Object.values(props).find((value) => value !== undefined)
+    ? (condition = true)
+    : "";
+  if (condition) {
+    return (
+      <React.Fragment>
+        <h2>statistics</h2>
+        <Paragraph value={props.good} text="good" />
+        <Paragraph value={props.neutral} text="neutral" />
+        <Paragraph value={props.bad} text="bad" />
+        <Paragraph value={props.total} text="total" />
+        <Paragraph value={props.average} text="average" />
+        <Paragraph value={props.partGood * 100} text="positive" znak={"%"} />
+      </React.Fragment>
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <p>No feedback given</p>
+      </React.Fragment>
+    );
+  }
 };
 const App = () => {
   // save clicks of each button to its own state
