@@ -3,10 +3,10 @@ import { useState } from "react";
 const Button = ({ handler, text }) => {
   return <button onClick={handler}>{text}</button>;
 };
-const Paragraph = ({ value, text }) => {
+const Paragraph = ({ value, text, znak }) => {
   return (
     <p>
-      {text} {value}
+      {text} {value} {znak}
     </p>
   );
 };
@@ -15,15 +15,47 @@ const App = () => {
   const [good, setGood] = useState(0);
   const [neutral, setNeutral] = useState(0);
   const [bad, setBad] = useState(0);
-
+  const [total, setTotal] = useState(0);
+  const [average, setAverage] = useState(0);
+  const [partGood, setPartGood] = useState(0);
   const handleGood = () => {
-    setGood(good + 1);
+    const opinion = "good";
+    const temp = good + 1;
+    setGood(temp);
+    const temp2 = temp + neutral + bad;
+    setTotal(temp2);
+    handleAverage(opinion, temp, temp2);
   };
   const handleNeutral = () => {
-    setNeutral(neutral + 1);
+    const opinion = "neutral";
+    const temp = neutral + 1;
+    setNeutral(temp);
+    const temp2 = temp + good + bad;
+    setTotal(temp2);
+    handleAverage(opinion, temp, temp2);
   };
   const handleBad = () => {
-    setBad(bad + 1);
+    const opinion = "bad";
+    const temp = bad + 1;
+    setBad(temp);
+    const temp2 = temp + good + neutral;
+    setTotal(temp2);
+    handleAverage(opinion, temp, temp2);
+  };
+  const handleAverage = (realOpinion, opinionCount, realTotal) => {
+    let suma;
+    if (realOpinion === "good") {
+      suma = opinionCount * 1 + neutral * 0 + bad * -1;
+      setPartGood(opinionCount / realTotal);
+    } else if (realOpinion === "neutral") {
+      suma = good * 1 + opinionCount * 0 + bad * -1;
+      setPartGood(good / realTotal);
+    } else if (realOpinion === "bad") {
+      suma = good * 1 + neutral * 0 + opinionCount * -1;
+      setPartGood(good / realTotal);
+    }
+    const temp = suma / realTotal;
+    setAverage(temp);
   };
   return (
     <div>
@@ -35,6 +67,9 @@ const App = () => {
       <Paragraph value={good} text="good" />
       <Paragraph value={neutral} text="neutral" />
       <Paragraph value={bad} text="bad" />
+      <Paragraph value={total} text="total" />
+      <Paragraph value={average} text="average" />
+      <Paragraph value={partGood * 100} text="positive" znak={"%"} />
     </div>
   );
 };
