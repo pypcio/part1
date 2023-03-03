@@ -1,15 +1,15 @@
 import React, { useState } from "react";
+
 const Button = ({ handler, text }) => {
   return <button onClick={handler}>{text}</button>;
 };
-const Paragraph = ({ value, text, znak }) => {
+const StatisticLine = ({ value, text, znak }) => {
   return (
     <p>
       {text} {value} {znak}
     </p>
   );
 };
-
 const Statistics = (props) => {
   let condition = false;
   Object.values(props).find((value) => value !== undefined)
@@ -19,12 +19,16 @@ const Statistics = (props) => {
     return (
       <React.Fragment>
         <h2>statistics</h2>
-        <Paragraph value={props.good} text="good" />
-        <Paragraph value={props.neutral} text="neutral" />
-        <Paragraph value={props.bad} text="bad" />
-        <Paragraph value={props.total} text="total" />
-        <Paragraph value={props.average} text="average" />
-        <Paragraph value={props.partGood * 100} text="positive" znak={"%"} />
+        <StatisticLine value={props.good} text="good" />
+        <StatisticLine value={props.neutral} text="neutral" />
+        <StatisticLine value={props.bad} text="bad" />
+        <StatisticLine value={props.total} text="total" />
+        <StatisticLine value={props.average} text="average" />
+        <StatisticLine
+          value={props.partGood * 100}
+          text="positive"
+          znak={"%"}
+        />
       </React.Fragment>
     );
   } else {
@@ -35,6 +39,7 @@ const Statistics = (props) => {
     );
   }
 };
+
 const App = () => {
   // save clicks of each button to its own state
   const [good, setGood] = useState(0);
