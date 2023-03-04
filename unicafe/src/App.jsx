@@ -1,92 +1,81 @@
 import React, { useState } from "react";
 
+import "./App.css";
 const Button = ({ handler, text }) => {
   return <button onClick={handler}>{text}</button>;
 };
-const StatisticLine = ({ value, text, znak }) => {
-  return (
-    <p>
-      {text} {value} {znak}
-    </p>
+const Tr = ({ row }) => {
+  const rowArray = row.map((element, i) => {
+    return <td key={element.toString()}> {element}</td>;
+  });
+  return <tr>{rowArray}</tr>;
+};
+const Tbody = (list) => {
+  const test = Object.values(list.dataTable).filter((value) => value !== 0);
+  return test.length !== 0 ? (
+    <tbody>{list.children}</tbody>
+  ) : (
+    <tbody>
+      <tr>
+        <td>No feedback given</td>
+      </tr>
+    </tbody>
   );
 };
-const Statistics = (props) => {
-  let condition = false;
-  Object.values(props).find((value) => value !== undefined)
-    ? (condition = true)
-    : "";
-  if (condition) {
-    return (
-      <React.Fragment>
-        <h2>statistics</h2>
-        <StatisticLine value={props.good} text="good" />
-        <StatisticLine value={props.neutral} text="neutral" />
-        <StatisticLine value={props.bad} text="bad" />
-        <StatisticLine value={props.total} text="total" />
-        <StatisticLine value={props.average} text="average" />
-        <StatisticLine
-          value={props.partGood * 100}
-          text="positive"
-          znak={"%"}
-        />
-      </React.Fragment>
-    );
-  } else {
-    return (
-      <React.Fragment>
-        <p>No feedback given</p>
-      </React.Fragment>
-    );
-  }
-};
-
-const App = () => {
-  // save clicks of each button to its own state
-  const [good, setGood] = useState(0);
-  const [neutral, setNeutral] = useState(0);
-  const [bad, setBad] = useState(0);
-  const [total, setTotal] = useState(0);
-  const [average, setAverage] = useState(0);
-  const [partGood, setPartGood] = useState(0);
+function App() {
+  const [dataTable, setDataTable] = useState({
+    good: 0,
+    neutral: 0,
+    bad: 0,
+    total: 0,
+    average: 0,
+    partGood: 0,
+  });
 
   const handleGood = () => {
-    const opinion = "good";
-    const temp = good + 1;
-    setGood(temp);
-    const temp2 = temp + neutral + bad;
-    setTotal(temp2);
-    handleAverage(opinion, temp, temp2);
+    const tempGood = dataTable.good + 1;
+    const tempTotal = dataTable.total + 1;
+    const tempAverage =
+      (tempGood * 1 + dataTable.neutral * 0 + dataTable.bad * -1) / tempTotal;
+    const tempPartGood = tempGood / tempTotal;
+    const newData = {
+      ...dataTable,
+      good: tempGood,
+      total: tempTotal,
+      average: tempAverage,
+      partGood: tempPartGood,
+    };
+    setDataTable(newData);
   };
   const handleNeutral = () => {
-    const opinion = "neutral";
-    const temp = neutral + 1;
-    setNeutral(temp);
-    const temp2 = temp + good + bad;
-    setTotal(temp2);
-    handleAverage(opinion, temp, temp2);
+    const tempNeutral = dataTable.neutral + 1;
+    const tempTotal = dataTable.total + 1;
+    const tempAverage =
+      (dataTable.good * 1 + tempNeutral * 0 + dataTable.bad * -1) / tempTotal;
+    const tempPartGood = dataTable.good / tempTotal;
+    const newData = {
+      ...dataTable,
+      neutral: tempNeutral,
+      total: tempTotal,
+      average: tempAverage,
+      partGood: tempPartGood,
+    };
+    setDataTable(newData);
   };
   const handleBad = () => {
-    const opinion = "bad";
-    const temp = bad + 1;
-    setBad(temp);
-    const temp2 = temp + good + neutral;
-    setTotal(temp2);
-    handleAverage(opinion, temp, temp2);
-  };
-  const handleAverage = (realOpinion, opinionCount, realTotal) => {
-    let suma;
-    if (realOpinion === "good") {
-      suma = opinionCount * 1 + neutral * 0 + bad * -1;
-      setPartGood(opinionCount / realTotal);
-    } else if (realOpinion === "neutral") {
-      suma = good * 1 + opinionCount * 0 + bad * -1;
-      setPartGood(good / realTotal);
-    } else if (realOpinion === "bad") {
-      suma = good * 1 + neutral * 0 + opinionCount * -1;
-      setPartGood(good / realTotal);
-    }
-    const temp = suma / realTotal;
-    setAverage(temp);
+    const tempBad = dataTable.bad + 1;
+    const tempTotal = dataTable.total + 1;
+    const tempAverage =
+      (dataTable.good * 1 + dataTable.neutral * 0 + tempBad * -1) / tempTotal;
+    const tempPartGood = dataTable.good / tempTotal;
+    const newData = {
+      ...dataTable,
+      bad: tempBad,
+      total: tempTotal,
+      average: tempAverage,
+      partGood: tempPartGood,
+    };
+    setDataTable(newData);
   };
   return (
     <div>
@@ -94,16 +83,19 @@ const App = () => {
       <Button handler={handleGood} text={"Good"} />
       <Button handler={handleNeutral} text={"Neutral"} />
       <Button handler={handleBad} text={"Bad"} />
-      <Statistics
-        good={good}
-        bad={bad}
-        neutral={neutral}
-        total={total}
-        average={average}
-        partGood={partGood}
-      />
+      <h2>Statistics</h2>
+      <table>
+        <Tbody dataTable={dataTable}>
+          <Tr row={["good", dataTable.good]} />
+          <Tr row={["neutral", dataTable.neutral]} />
+          <Tr row={["bad", dataTable.bad]} />
+          <Tr row={["total", dataTable.total]} />
+          <Tr row={["average", dataTable.average]} />
+          <Tr row={["positive", `${dataTable.partGood * 100}%`]} />
+        </Tbody>
+      </table>
     </div>
   );
-};
+}
 
 export default App;
