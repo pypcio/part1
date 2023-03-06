@@ -1,8 +1,17 @@
 import React, { useState } from "react";
 import "./App.css";
 
-const Button = ({ handle }) => {
-  return <button onClick={handle}>random</button>;
+const Button = ({ handle, text }) => {
+  return <button onClick={handle}>{text}</button>;
+};
+const ButtonVote = ({ vote }) => {
+  return <button>Vote</button>;
+};
+const Div = ({ data }) => {
+  console.log(data);
+  return data.map((board) => {
+    return <p>{`${Object.keys(board)} --->${Object.values(board)} `}</p>;
+  });
 };
 const App = () => {
   const [selected, setSelected] = useState(0);
@@ -16,6 +25,18 @@ const App = () => {
     "Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.",
     "The only way to go fast, is to go well.",
   ];
+  const [vote, setVotes] = useState([0, 0, 0, 0, 0, 0, 0, 0]);
+  const handleVotes = () => {
+    const temp = vote.map((element, index) => {
+      if (index === selected) {
+        return (element += 1);
+      } else {
+        return element;
+      }
+    });
+    console.log(temp);
+    setVotes(temp);
+  };
   const generateRandomNumber = (maxRange) => {
     return Math.floor(Math.random() * maxRange);
   };
@@ -23,11 +44,14 @@ const App = () => {
     const temp = generateRandomNumber(anecdotes.length);
     setSelected(temp);
   };
-
   return (
     <div>
       <h4>{anecdotes[selected]}</h4>
-      <Button handle={handleSelected} />
+      <p>{`has ${vote[selected]} votes`}</p>
+      <div className="buttons">
+        <Button handle={handleSelected} text={"generate"} />
+        <Button handle={handleVotes} text={"vote"} />
+      </div>
     </div>
   );
 };

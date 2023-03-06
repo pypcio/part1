@@ -8,7 +8,19 @@ div {
   align-items: center;
   margin-top: 5rem;
 }
-h4 {
+h4,
+p {
   width: 80%;
   text-align: center;
+  margin: 5px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: row;
+
+  margin: 1em;
+}
+.buttons button {
+  margin: 5px;
 }
