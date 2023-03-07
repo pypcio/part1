@@ -4,15 +4,11 @@ import "./App.css";
 const Button = ({ handle, text }) => {
   return <button onClick={handle}>{text}</button>;
 };
-const ButtonVote = ({ vote }) => {
-  return <button>Vote</button>;
+const P = ({ bestQuote }) => {
+  const Quote = bestQuote();
+  return <p>{Quote}</p>;
 };
-const Div = ({ data }) => {
-  console.log(data);
-  return data.map((board) => {
-    return <p>{`${Object.keys(board)} --->${Object.values(board)} `}</p>;
-  });
-};
+
 const App = () => {
   const [selected, setSelected] = useState(0);
   const anecdotes = [
@@ -34,7 +30,6 @@ const App = () => {
         return element;
       }
     });
-    console.log(temp);
     setVotes(temp);
   };
   const generateRandomNumber = (maxRange) => {
@@ -44,16 +39,34 @@ const App = () => {
     const temp = generateRandomNumber(anecdotes.length);
     setSelected(temp);
   };
+
+  const bestQuote = () => {
+    let position = 0;
+    let value = 0;
+
+    vote.forEach((element, index) => {
+      if (value < element) {
+        value = element;
+        position = index;
+      }
+    });
+    return anecdotes.filter((element, index) => {
+      return index === position ? element : "";
+    });
+  };
+
   return (
     <div>
-      <h4>{anecdotes[selected]}</h4>
+      <h1>Anecdote of the day</h1>
+      <p>{anecdotes[selected]}</p>
       <p>{`has ${vote[selected]} votes`}</p>
       <div className="buttons">
-        <Button handle={handleSelected} text={"generate"} />
         <Button handle={handleVotes} text={"vote"} />
+        <Button handle={handleSelected} text={"next anecdote"} />
       </div>
+      <h1>Anecdotes with most votes</h1>
+      <P bestQuote={bestQuote} />
     </div>
   );
 };
-
 export default App;
